@@ -27,8 +27,5 @@ jobs:
               -o IdentitiesOnly=yes \
               -o PreferredAuthentications=publickey \
               -o PubkeyAuthentication=yes \
-              alien@${{ secrets.SERVER_IP }} << 'EOF'
-            set -e
-            cd ~/flask-instagram-download
-            git pull origin main
-          EOF
+              alien@${{ secrets.SERVER_IP }} \
+              "cd ~/flask-instagram-download && git pull origin main"
