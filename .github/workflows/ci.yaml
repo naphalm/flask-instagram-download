@@ -23,9 +23,5 @@ jobs:
 
       - name: Deploy to server
         run: |
-          ssh -i ~/.ssh/id_ed25519 \
-              -o IdentitiesOnly=yes \
-              -o PreferredAuthentications=publickey \
-              -o PubkeyAuthentication=yes \
               alien@${{ secrets.SERVER_IP }} \
               "cd ~/flask-instagram-download && git pull origin main"
