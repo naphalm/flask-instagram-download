@@ -23,12 +23,7 @@ jobs:
 
       - name: Check SSH key fingerprint
         run: ssh-keygen -lf ~/.ssh/id_ed25519
-        
+
       - name: Deploy to server
-        run: |
-          ssh -i ~/.ssh/id_ed25519 \
-              -o IdentitiesOnly=yes \
-              -o PreferredAuthentications=publickey \
-              -o PubkeyAuthentication=yes \
-              alien@${{ secrets.SERVER_IP }} \
-              "cd ~/flask-instagram-download && git pull origin main && docker compose up -d --build"
+        run: ssh -i ~/.ssh/id_ed25519 -o IdentitiesOnly=yes -o PreferredAuthentications=publickey -o PubkeyAuthentication=yes alien@${{ secrets.SERVER_IP }} "cd ~/flask-instagram-download && git pull origin main"
+
