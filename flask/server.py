@@ -27,16 +27,23 @@ def extract_reel_id(url: str) -> str | None:
     return match.group(1) if match else None
 
 
+def normalize_url(reel_id: str) -> str:
+    # Always convert to /p/<ID>/ for yt-dlp
+    return f"https://www.instagram.com/p/{reel_id}/"
+
+
 @app.route("/download_reel", methods=["GET"])
 def download_reel():
-    reel_url = request.args.get("url")
+    input_url = request.args.get("url")
 
-    if not reel_url:
+    if not input_url:
         return jsonify({"error": "Missing 'url' parameter"}), 400
 
-    reel_id = extract_reel_id(reel_url)
+    reel_id = extract_reel_id(input_url)
     if not reel_id:
-        return jsonify({"error": "Invalid Instagram reel URL"}), 400
+        return jsonify({"error": "Invalid Instagram URL"}), 400
+
+    normalized_url = normalize_url(reel_id)
 
     filename = f"{reel_id}.mp4"
     filepath = os.path.join(DOWNLOAD_DIR, filename)
@@ -53,7 +60,7 @@ def download_reel():
 
         try:
             with yt_dlp.YoutubeDL(ydl_opts) as ydl:
-                ydl.download([reel_url])
+                ydl.download([normalized_url])
         except Exception as e:
             return jsonify({"error": str(e)}), 500
 
@@ -61,6 +68,7 @@ def download_reel():
 
     return jsonify({
         "reel_id": reel_id,
+        "normalized_url": normalized_url,
         "file_url": public_url
     })
 
