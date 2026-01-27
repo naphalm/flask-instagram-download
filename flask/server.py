@@ -2,7 +2,6 @@ from flask import Flask, request, jsonify, send_file
 import sys
 import os
 import threading
-from utils import adapter
 
 # Add the path to the downloader script to sys.path
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
@@ -11,6 +10,8 @@ DOWNLOAD_DIR = "downloads"
 os.makedirs(DOWNLOAD_DIR, exist_ok=True)
 
 REEL_REGEX = re.compile(r"instagram\.com/reel/([^/?]+)/?")
+
+from utils import adapter
 
 app = Flask(__name__)
 app.config['MAX_CONTENT_LENGTH'] = 16 * 1024 * 1024  # Max upload size 16MB
