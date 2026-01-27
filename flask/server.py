@@ -2,14 +2,15 @@ from flask import Flask, request, jsonify, send_file
 import sys
 import os
 import threading
+from utils import adapter
 
 # Add the path to the downloader script to sys.path
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 
-# Now import the function from the correct location
-# from download_youtube import download_youtube_video
+DOWNLOAD_DIR = "downloads"
+os.makedirs(DOWNLOAD_DIR, exist_ok=True)
 
-from utils import adapter
+REEL_REGEX = re.compile(r"instagram\.com/reel/([^/?]+)/?")
 
 app = Flask(__name__)
 app.config['MAX_CONTENT_LENGTH'] = 16 * 1024 * 1024  # Max upload size 16MB
@@ -32,19 +33,9 @@ def info():
 @app.route('/download_reel', methods=['GET'])
 def download_reel():
     message = adapter.download_reel()
-    return message
+    return jsonify(message)
 
-
-
-# @app.route('/generate_video_from_voice', methods=['POST'])
-# def generate_video_from_voice():
-#     pass
-
-
-# @app.route('/transcribe_audio', methods=['POST'])
-# def transcribe_audio():
-#     pass
-    
+ 
 
 
 if __name__ == '__main__':
