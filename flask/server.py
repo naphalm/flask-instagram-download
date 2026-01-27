@@ -17,8 +17,10 @@ COOKIES_FILE = "cookies.txt"
 
 os.makedirs(DOWNLOAD_DIR, exist_ok=True)
 
-REEL_REGEX = re.compile(r"instagram\.com/reel/([^/?]+)/?")
-
+REEL_REGEX = re.compile(
+    r"instagram\.com/(?:reel|reels|p)/([^/?]+)/?",
+    re.IGNORECASE
+)
 
 def extract_reel_id(url: str) -> str | None:
     match = REEL_REGEX.search(url)
