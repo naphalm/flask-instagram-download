@@ -10,7 +10,7 @@
 # from . import pyai
 # from . import tgbot
 
-def download_reel(voice):
+def download_reel():
     return jsonify({
         "func": "DownloadReel"
     })

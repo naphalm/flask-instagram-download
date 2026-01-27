@@ -31,7 +31,8 @@ def info():
   
 @app.route('/download_reel', methods=['GET'])
 def download_reel():
-    return adapter.download_reel()
+    message = adapter.download_reel()
+    return message
 
 
 
