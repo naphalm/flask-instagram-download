@@ -61,15 +61,29 @@ def download_reel():
         try:
             with yt_dlp.YoutubeDL(ydl_opts) as ydl:
                 ydl.download([normalized_url])
+                info = ydl.extract_info(url, download=False)
         except Exception as e:
             return jsonify({"error": str(e)}), 500
 
+    metadata = {
+        "id": info.get("id"),
+        "title": info.get("title"),
+        "description": info.get("description"),
+        "uploader": info.get("uploader"),
+        "upload_date": info.get("upload_date"),
+        "tags": info.get("tags"),
+        "duration": info.get("duration"),
+        "view_count": info.get("view_count"),
+        "like_count": info.get("like_count"),
+        "webpage_url": info.get("webpage_url"),
+        "thumbnail": info.get("thumbnail"),
+    }
     public_url = request.host_url.rstrip("/") + f"/reels/{filename}"
 
     return jsonify({
         "reel_id": reel_id,
-        "normalized_url": normalized_url,
-        "file_url": public_url
+        "file_url": public_url,
+        "metad": metadata 
     })
 
 
