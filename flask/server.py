@@ -2,6 +2,7 @@ from flask import Flask, request, jsonify, send_from_directory, abort
 import yt_dlp
 import os
 import re
+import sys
 
 # Add the path to the downloader script to sys.path
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
