@@ -11,7 +11,7 @@
 # from . import tgbot
 
 def download_reel():
-    return "func": "DownloadReel"
+    return "DownloadReel"
 
 
 
