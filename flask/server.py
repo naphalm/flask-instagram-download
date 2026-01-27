@@ -12,33 +12,19 @@ from utils import adapter
 app = Flask(__name__)
 app.config['MAX_CONTENT_LENGTH'] = 16 * 1024 * 1024  # Max upload size 16MB
 
-
-
 DOWNLOAD_DIR = "downloads"
+COOKIES_FILE = "cookies.txt"
 
 os.makedirs(DOWNLOAD_DIR, exist_ok=True)
 
 REEL_REGEX = re.compile(r"instagram\.com/reel/([^/?]+)/?")
 
-# GET endpoint for basic health check
-@app.route('/', methods=['GET'])
-def home():
-    return "✅ Flask server is running!"
-
-# GET endpoint with simple JSON response
-@app.route('/info', methods=['GET'])
-def info():
-    return jsonify({
-        "name": "InstaDownloader",
-        "version": "1.0",
-        "status": "running"
-    })
 
 def extract_reel_id(url: str) -> str | None:
     match = REEL_REGEX.search(url)
     return match.group(1) if match else None
 
-  
+
 @app.route("/download_reel", methods=["GET"])
 def download_reel():
     reel_url = request.args.get("url")
@@ -60,6 +46,7 @@ def download_reel():
             "merge_output_format": "mp4",
             "quiet": True,
             "noplaylist": True,
+            "cookiefile": COOKIES_FILE,
         }
 
         try:
@@ -82,8 +69,6 @@ def serve_reel(filename):
         abort(404)
     return send_from_directory(DOWNLOAD_DIR, filename, mimetype="video/mp4")
 
- 
 
-
-if __name__ == '__main__':
-    app.run(host='0.0.0.0', port=5000, debug=True)
+if __name__ == "__main__":
+    app.run(host="0.0.0.0", port=5000)
