@@ -35,7 +35,6 @@ def normalize_url(reel_id: str) -> str:
 @app.route("/download_reel", methods=["GET"])
 def download_reel():
     input_url = request.args.get("url")
-
     if not input_url:
         return jsonify({"error": "Missing 'url' parameter"}), 400
 
@@ -44,26 +43,29 @@ def download_reel():
         return jsonify({"error": "Invalid Instagram URL"}), 400
 
     normalized_url = normalize_url(reel_id)
-
     filename = f"{reel_id}.mp4"
     filepath = os.path.join(DOWNLOAD_DIR, filename)
 
-    if not os.path.exists(filepath):
-        ydl_opts = {
-            "format": "mp4",
-            "outtmpl": filepath,
-            "merge_output_format": "mp4",
-            "quiet": True,
-            "noplaylist": True,
-            "cookiefile": COOKIES_FILE,
-        }
+    ydl_opts = {
+        "format": "mp4",
+        "outtmpl": filepath,
+        "merge_output_format": "mp4",
+        "quiet": True,
+        "noplaylist": True,
+        "cookiefile": COOKIES_FILE,
+    }
 
-        try:
-            with yt_dlp.YoutubeDL(ydl_opts) as ydl:
+    try:
+        with yt_dlp.YoutubeDL(ydl_opts) as ydl:
+            # Extract metadata first
+            info = ydl.extract_info(normalized_url, download=False)
+
+            # Download only if file does not exist
+            if not os.path.exists(filepath):
                 ydl.download([normalized_url])
-                info = ydl.extract_info(url, download=False)
-        except Exception as e:
-            return jsonify({"error": str(e)}), 500
+
+    except Exception as e:
+        return jsonify({"error": f"yt-dlp failed: {str(e)}"}), 500
 
     metadata = {
         "id": info.get("id"),
@@ -78,13 +80,15 @@ def download_reel():
         "webpage_url": info.get("webpage_url"),
         "thumbnail": info.get("thumbnail"),
     }
+
     public_url = request.host_url.rstrip("/") + f"/reels/{filename}"
 
     return jsonify({
         "reel_id": reel_id,
         "file_url": public_url,
-        "metad": metadata 
+        "metadata": metadata
     })
+
 
 
 @app.route("/reels/<path:filename>", methods=["GET"])
