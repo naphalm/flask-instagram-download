@@ -12,7 +12,7 @@ from utils import adapter
 app = Flask(__name__)
 app.config['MAX_CONTENT_LENGTH'] = 16 * 1024 * 1024  # Max upload size 16MB
 
-DOWNLOAD_DIR = "downloads"
+DOWNLOAD_DIR = "/var/www/instagram-reels"
 COOKIES_FILE = "cookies.txt"
 
 os.makedirs(DOWNLOAD_DIR, exist_ok=True)
