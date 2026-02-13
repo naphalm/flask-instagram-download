@@ -4,9 +4,10 @@ import yt_dlp
 import os
 import re
 import sys
+from dotenv import load_dotenv
 
 DOWNLOAD_DIR = "/var/www/instagram-reels"
-COOKIES_FILE = "cookies.txt"
+# COOKIES_FILE = "cookies.txt"
 
 os.makedirs(DOWNLOAD_DIR, exist_ok=True)
 
@@ -43,7 +44,9 @@ def download_reel(url, host_url):
         "merge_output_format": "mp4",
         "quiet": True,
         "noplaylist": True,
-        "cookiefile": COOKIES_FILE,
+        # "cookiefile": COOKIES_FILE,
+        "username": os.getenv("INSTAGRAM_USERNAME")
+        "password": os.getenv("INSTAGRAM_PASSWORD")
     }
 
     try:
