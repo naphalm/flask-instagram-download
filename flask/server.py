@@ -30,7 +30,7 @@ def download_reel():
     if not input_url:
         return jsonify({"error": "Missing 'url' parameter"}), 400
 
-    reel_id = extract_reel_id(input_url)
+    reel_id = instagram.extract_reel_id(input_url)
     if not reel_id:
         return jsonify({"error": "Invalid Instagram URL"}), 400
     
