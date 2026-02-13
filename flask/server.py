@@ -1,3 +1,5 @@
+# server.py
+
 from flask import Flask, request, jsonify, send_from_directory, abort
 import sys
 import os
@@ -27,9 +29,10 @@ app.config['MAX_CONTENT_LENGTH'] = 16 * 1024 * 1024  # Max upload size 16MB
 @app.route("/download_reel", methods=["GET"])
 def download_reel():
     input_url = request.args.get("url")
-    
-    reel_id, public_url, metadata = instagram.download_reel(input_url)
 
+    host_url = request.host_url  # capture host_url here
+    
+    reel_id, public_url, metadata = instagram.download_reel(input_url, host_url)
     return jsonify({
         "reel_id": reel_id,
         "file_url": public_url,

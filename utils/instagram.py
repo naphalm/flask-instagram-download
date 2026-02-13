@@ -25,15 +25,13 @@ def normalize_url(reel_id: str) -> str:
     return f"https://www.instagram.com/p/{reel_id}/"
 
 
-def download_reel(url):
-    input_url = url
+def download_reel(url, host_url):
+    if not url:
+        return None, None, {"error": "Missing 'url' parameter"}
 
-    if not input_url:
-        return jsonify({"error": "Missing 'url' parameter"}), 400
-
-    reel_id = extract_reel_id(input_url)
+    reel_id = extract_reel_id(url)
     if not reel_id:
-        return jsonify({"error": "Invalid Instagram URL"}), 400
+        return None, None, {"error": "Invalid Instagram URL"}
 
     normalized_url = normalize_url(reel_id)
     filename = f"{reel_id}.mp4"
@@ -50,15 +48,11 @@ def download_reel(url):
 
     try:
         with yt_dlp.YoutubeDL(ydl_opts) as ydl:
-            # Extract metadata first
             info = ydl.extract_info(normalized_url, download=False)
-
-            # Download only if file does not exist
             if not os.path.exists(filepath):
                 ydl.download([normalized_url])
-
     except Exception as e:
-        return jsonify({"error": f"yt-dlp failed: {str(e)}"}), 500
+        return None, None, {"error": f"yt-dlp failed: {str(e)}"}
 
     metadata = {
         "id": info.get("id"),
@@ -74,11 +68,5 @@ def download_reel(url):
         "thumbnail": info.get("thumbnail"),
     }
 
-    public_url = request.host_url.rstrip("/") + f"/reels/{filename}"
-
+    public_url = host_url.rstrip("/") + f"/reels/{filename}"
     return reel_id, public_url, metadata
-    # jsonify({
-    #     "reel_id": reel_id,
-    #     "file_url": public_url,
-    #     "metadata": metadata
-    # })
