@@ -10,6 +10,8 @@
 # from . import pyai
 # from . import tgbot
 
+from . import instagram
+
 def download_reel():
     return "DownloadReel"
 
