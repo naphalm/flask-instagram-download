@@ -27,13 +27,6 @@ app.config['MAX_CONTENT_LENGTH'] = 16 * 1024 * 1024  # Max upload size 16MB
 @app.route("/download_reel", methods=["GET"])
 def download_reel():
     input_url = request.args.get("url")
-    if not input_url:
-        return jsonify({"error": "Missing 'url' parameter"}), 400
-
-    reel_id = instagram.extract_reel_id(input_url)
-    if not reel_id:
-        return jsonify({"error": "Invalid Instagram URL"}), 400
-    
     
     reel_id, public_url, metadata = instagram.download_reel(input_url)
 

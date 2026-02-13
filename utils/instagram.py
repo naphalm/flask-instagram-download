@@ -28,6 +28,13 @@ def normalize_url(reel_id: str) -> str:
 def download_reel(url):
     input_url = url
 
+    if not input_url:
+        return jsonify({"error": "Missing 'url' parameter"}), 400
+        
+    reel_id = instagram.extract_reel_id(input_url)
+    if not reel_id:
+        return jsonify({"error": "Invalid Instagram URL"}), 400
+
     normalized_url = normalize_url(reel_id)
     filename = f"{reel_id}.mp4"
     filepath = os.path.join(DOWNLOAD_DIR, filename)
