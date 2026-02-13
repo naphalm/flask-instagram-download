@@ -4,6 +4,19 @@ import os
 import re
 import sys
 
+#  gunicorn --workers 3 --bind 0.0.0.0:8000 server:app
+
+# systemctl daemon-reexec
+# systemctl daemon-reload
+# systemctl enable gunicorn
+# systemctl start gunicorn
+
+# systemctl status gunicorn
+# journalctl -u gunicorn --no-pager
+
+# ps aux | grep gunicorn
+
+
 # Add the path to the downloader script to sys.path
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 
