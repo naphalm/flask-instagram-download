@@ -5,21 +5,21 @@ import yt_dlp
 
 DOWNLOAD_DIR = "/var/www/instagram-reels"
 
-BOT_TOKEN = os.getenv("TELEGRAM_BOT_TOKEN")
-CHAT_ID = os.getenv("TELEGRAM_CHAT_ID")
+SC_BOT_TOKEN = os.getenv("SC_TELEGRAM_BOT_TOKEN")
+# CHAT_ID = os.getenv("TELEGRAM_CHAT_ID")
 
 
 def ensure_download_dir():
     os.makedirs(DOWNLOAD_DIR, exist_ok=True)
 
 
-def send_to_telegram(file_path, caption=""):
-    url = f"https://api.telegram.org/bot{BOT_TOKEN}/sendDocument"
+def send_to_telegram(chat_id, file_path, caption=""):
+    url = f"https://api.telegram.org/bot{SC_BOT_TOKEN}/sendDocument"
 
     with open(file_path, "rb") as f:
         requests.post(
             url,
-            data={"chat_id": CHAT_ID, "caption": caption},
+            data={"chat_id": chat_id, "caption": caption},
             files={"document": f}
         )
 
@@ -35,7 +35,7 @@ def create_zip(file_paths, zip_name):
     return zip_path
 
 
-def download_and_send(input_url):
+def download_and_send(input_url, chat_id):
 
     ensure_download_dir()
 
@@ -77,7 +77,7 @@ def download_and_send(input_url):
 
             filename = ydl.prepare_filename(info)
 
-            send_to_telegram(filename, caption=info.get("title"))
+            send_to_telegram(chat_id,filename, caption=info.get("title"))
 
             return {
                 "type": "track",

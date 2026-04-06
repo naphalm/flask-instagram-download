@@ -51,11 +51,12 @@ def serve_reel(filename):
 def download_soundcloud():
 
     input_url = request.args.get("url")
+    chat_id = request.args.get("chat_id")
 
     if not input_url:
-        return jsonify({"error": "Missing url parameter"}), 400
+        return jsonify({"error": "Not a Link"}), 400
 
-    result = soundcloud.download_and_send(input_url)
+    result = soundcloud.download_and_send(input_url, chat_id)
 
     return jsonify(result)
 
