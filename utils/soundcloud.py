@@ -40,9 +40,14 @@ def download_and_send(input_url, chat_id):
     ensure_download_dir()
 
     ydl_opts = {
-        "format": "bestaudio/best",
-        "outtmpl": os.path.join(DOWNLOAD_DIR, "%(title)s.%(ext)s"),
-        "quiet": True,
+    "format": "bestaudio/best",
+    "outtmpl": "downloads/%(title)s.%(ext)s",
+
+    "postprocessors": [{
+            "key": "FFmpegExtractAudio",
+            "preferredcodec": "mp3",
+            "preferredquality": "192",
+        }],
     }
 
     downloaded_files = []
