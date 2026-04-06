@@ -46,7 +46,7 @@ def download_and_send(input_url, chat_id):
     "postprocessors": [{
         "key": "FFmpegExtractAudio",
         "preferredcodec": "mp3",
-        "preferredquality": "192",
+        "preferredquality": "320",
     }],
     }
 
@@ -56,35 +56,38 @@ def download_and_send(input_url, chat_id):
 
         info = ydl.extract_info(input_url, download=True)
 
-        # PLAYLIST
-        if "entries" in info:
+    # PLAYLIST
+    if "entries" in info:
 
-            for entry in info["entries"]:
-                if entry is None:
-                    continue
+        for entry in info["entries"]:
+            if entry is None:
+                continue
 
-                filename = ydl.prepare_filename(entry)
-                downloaded_files.append(filename)
+            filename = ydl.prepare_filename(entry)
+            filename = os.path.splitext(filename)[0] + ".mp3"
 
-            zip_name = f"{info.get('title','playlist')}.zip"
-            zip_path = create_zip(downloaded_files, zip_name)
+            downloaded_files.append(filename)
 
-            send_to_telegram(zip_path, caption="SoundCloud playlist")
+        zip_name = f"{info.get('title','playlist')}.zip"
+        zip_path = create_zip(downloaded_files, zip_name)
 
-            return {
-                "type": "playlist",
-                "files": len(downloaded_files),
-                "zip": zip_name
-            }
+        send_to_telegram(chat_id, zip_path, caption="SoundCloud playlist")
 
-        # SINGLE TRACK
-        else:
+        return {
+            "type": "playlist",
+            "files": len(downloaded_files),
+            "zip": zip_name
+        }
 
-            filename = ydl.prepare_filename(info)
+    # SINGLE TRACK
+    else:
 
-            send_to_telegram(chat_id,filename, caption=info.get("title"))
+        filename = ydl.prepare_filename(info)
+        filename = os.path.splitext(filename)[0] + ".mp3"
 
-            return {
-                "type": "track",
-                "file": os.path.basename(filename)
-            }
+        send_to_telegram(chat_id, filename, caption=info.get("title"))
+
+        return {
+            "type": "track",
+            "file": os.path.basename(filename)
+        }
