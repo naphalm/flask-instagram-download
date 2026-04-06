@@ -55,7 +55,10 @@ def download_soundcloud():
     chat_id = request.args.get("chat_id")
 
     if not input_url:
-        return jsonify({"error": "Not a Link"}), 400
+        return jsonify({"error": "Missing url parameter"}), 400
+
+    if not chat_id:
+        return jsonify({"error": "Missing chat_id parameter"}), 400
 
     result = soundcloud.download_and_send(input_url, chat_id)
 
