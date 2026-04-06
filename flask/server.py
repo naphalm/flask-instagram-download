@@ -5,6 +5,7 @@ import sys
 import os
 # gunicorn --workers 3 --bind 0.0.0.0:8000 server:app
 
+# sudo systemctl daemon-reload
 # sudo systemctl restart gunicorn
 # systemctl daemon-reexec
 # systemctl daemon-reload

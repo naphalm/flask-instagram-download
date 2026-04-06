@@ -44,10 +44,10 @@ def download_and_send(input_url, chat_id):
     "outtmpl": "downloads/%(title)s.%(ext)s",
 
     "postprocessors": [{
-            "key": "FFmpegExtractAudio",
-            "preferredcodec": "mp3",
-            "preferredquality": "192",
-        }],
+        "key": "FFmpegExtractAudio",
+        "preferredcodec": "mp3",
+        "preferredquality": "192",
+    }],
     }
 
     downloaded_files = []
