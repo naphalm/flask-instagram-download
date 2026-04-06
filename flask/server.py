@@ -22,6 +22,7 @@ sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 
 from utils import adapter
 from utils import instagram
+from utils import soundcloud
 
 app = Flask(__name__)
 app.config['MAX_CONTENT_LENGTH'] = 16 * 1024 * 1024  # Max upload size 16MB
@@ -39,13 +40,24 @@ def download_reel():
         "metadata": metadata
     })
 
-
 @app.route("/reels/<path:filename>", methods=["GET"])
 def serve_reel(filename):
     if not filename.endswith(".mp4"):
         abort(404)
     return send_from_directory(instagram.DOWNLOAD_DIR, filename, mimetype="video/mp4")
 
+
+@app.route("/download_soundcloud", methods=["GET"])
+def download_soundcloud():
+
+    input_url = request.args.get("url")
+
+    if not input_url:
+        return jsonify({"error": "Missing url parameter"}), 400
+
+    result = soundcloud.download_and_send(input_url)
+
+    return jsonify(result)
 
 if __name__ == "__main__":
     app.run(host="0.0.0.0", port=5000)

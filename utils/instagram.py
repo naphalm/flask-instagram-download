@@ -45,8 +45,8 @@ def download_reel(url, host_url):
         "quiet": True,
         "noplaylist": True,
         # "cookiefile": COOKIES_FILE,
-        "username": os.getenv("INSTAGRAM_USERNAME")
-        "password": os.getenv("INSTAGRAM_PASSWORD")
+        "username": os.getenv("INSTAGRAM_USERNAME"),
+        "password": os.getenv("INSTAGRAM_PASSWORD"),
     }
 
     try:
