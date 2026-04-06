@@ -3,6 +3,21 @@ import zipfile
 import requests
 import yt_dlp
 
+from urllib.parse import urlparse
+
+def is_valid_url(url: str) -> bool:
+    try:
+        parsed = urlparse(url)
+        return parsed.scheme in ("http", "https") and parsed.netloc != ""
+    except:
+        return False
+
+def is_soundcloud_url(url: str) -> bool:
+    parsed = urlparse(url)
+    return "soundcloud.com" in parsed.netloc
+
+
+
 DOWNLOAD_DIR = "/var/www/instagram-reels"
 
 SC_BOT_TOKEN = os.getenv("SC_TELEGRAM_BOT_TOKEN")
@@ -37,6 +52,15 @@ def create_zip(file_paths, zip_name):
 
 def download_and_send(input_url, chat_id):
 
+    if not input_url:
+        return jsonify({"error": "Missing url parameter"}), 400
+
+    if not is_valid_url(input_url):
+        return jsonify({"error": "Invalid URL"}), 400
+
+    if not is_soundcloud_url(input_url):
+        return jsonify({"error": "Only SoundCloud URLs allowed"}), 400
+        
     ensure_download_dir()
 
     ydl_opts = {
